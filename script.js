@@ -48,8 +48,42 @@ form.addEventListener('click', e => {
   if (b.dataset.send === 'wa') {
     window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(m.text), '_blank', 'noopener');
   } else {
-    location.href = 'mailto:' + EMAIL +
-      '?subject=' + encodeURIComponent('Property management enquiry' + (m.org ? ' - ' + m.org : '')) +
-      '&body=' + encodeURIComponent(m.text);
+    sendEmail(b, m);
   }
 });
+
+function sendEmail(btn, m) {
+  const subject = 'Property management enquiry' + (m.org ? ' - ' + m.org : '');
+  const d = new FormData(form);
+  const label = btn.textContent;
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+  fetch('https://formsubmit.co/ajax/' + EMAIL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    body: JSON.stringify({
+      _subject: subject,
+      _template: 'table',
+      _captcha: 'false',
+      _replyto: d.get('email'),
+      name: d.get('name'),
+      organization: d.get('org') || '-',
+      email: d.get('email'),
+      requirements: d.get('message') || '-'
+    })
+  })
+    .then(r => r.json().then(j => ({ ok: r.ok && String(j.success) !== 'false', j })))
+    .then(res => {
+      if (!res.ok) throw new Error(res.j && res.j.message);
+      form.reset();
+      note.textContent = 'Thank you! Your enquiry has been sent. We will get back to you shortly.';
+      note.style.color = '#2e7d4f';
+    })
+    .catch(() => {
+      note.style.color = '#b3392f';
+      note.innerHTML = 'Could not send automatically. <a href="https://mail.google.com/mail/?view=cm&fs=1&to=' +
+        EMAIL + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(m.text) +
+        '" target="_blank" rel="noopener"><b>Open Gmail to send</b></a> or use WhatsApp.';
+    })
+    .finally(() => { btn.disabled = false; btn.textContent = label; });
+}
