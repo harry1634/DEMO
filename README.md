@@ -1,16 +1,12 @@
-# Veera Property Management Services website starter
+# Veerah Property Management website
 
-Responsive one-page website for Veera Property Management Services (VPMS), identified as a subsidiary of Veera Deluxe Living.
+Responsive one-page static website for Veerah Property Management (PG, hostel and residential community management, Hyderabad).
 
 ## Preview
-Open `index.html` in a modern browser. The remote hero photo and Google Fonts require internet access.
+Open `index.html` in a modern browser. The hero photo and Google Fonts need internet access.
 
-## Before publishing
-- Replace `ADD-OFFICIAL-EMAIL-HERE` in `script.js` with the official enquiry email.
-- Add approved phone number, business email, address and registration details if desired.
-- Confirm the exact legal relationship and approved wording for Veera Deluxe Living and VPMS.
-- Use licensed/owned imagery and add a privacy notice if collecting visitor information.
-- Test on desktop and mobile.
+## Enquiries
+The contact form opens WhatsApp (+91 99638 91199) or the visitor's email app (veerahpropertymanagement@gmail.com) with the enquiry pre-filled. To change the numbers or email, edit `WA` and `EMAIL` at the top of `script.js` and the links in `index.html`.
 
 ## Publishing
-Upload `index.html`, `styles.css` and `script.js` to your web host or a static host such as Netlify or GitHub Pages. This package does not register a domain or publish the website automatically.
+Static site, no build step. Deploy to Vercel (framework preset "Other") or any static host.
