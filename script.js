@@ -49,11 +49,23 @@ form.addEventListener('click', e => {
   if (b.dataset.send === 'wa') {
     window.open('https://wa.me/' + WA + '?text=' + encodeURIComponent(m.text), '_blank', 'noopener');
   } else {
-    // Opens Gmail compose in a new tab, addressed to Veerah and pre-filled.
-    const subject = 'Property management enquiry' + (m.org ? ' - ' + m.org : '');
-    const url = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(EMAIL) +
-      '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(m.text);
-    const w = window.open(url, '_blank', 'noopener');
-    if (!w) location.href = url; // popup blocked: open in the same tab
+    openMail('Property management enquiry' + (m.org ? ' - ' + m.org : ''), m.text);
   }
 });
+
+// Phones: mailto opens the Gmail/Mail app on the compose screen (web links only open the inbox).
+// Desktop: opens Gmail compose in a new tab.
+function openMail(subject, body) {
+  const q = 'su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+  if (/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)) {
+    location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+    return;
+  }
+  const url = 'https://mail.google.com/mail/u/0/?fs=1&tf=cm&to=' + encodeURIComponent(EMAIL) + '&' + q;
+  if (!window.open(url, '_blank', 'noopener')) location.href = url;
+}
+
+document.querySelectorAll('.mail-link').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault();
+  openMail('Property management enquiry', 'Hello Veerah Property Management,\n\n');
+}));
